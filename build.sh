@@ -26,7 +26,10 @@ cd src
 rm -rf build
 mkdir -p build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/android.toolchain.cmake .. -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DANDROID_STL=none -DLIBRARY_OUTPUT_PATH_ROOT=..
+CUDA_ANDROID_HOME = $ENV{CUDA_ANDROID_HOME}
+CUDA_TOOLKIT_ROOT = $ENV{CUDA_TOOLKIT_ROOT}
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/android.toolchain.cmake .. -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DANDROID_STL=none -DANDROID_TOOLCHAIN_NAME=aarch64-linux-android-4.9 -DCUDA_NVCC_EXECUTABLE=$CUDA_TOOLKIT_ROOT/bin/nvcc -DCUDA_SDK_ROOT_DIR=$CUDA_TOOLKIT_ROOT/samples -DCUDA_TOOLKIT_ROOT_DIR=$CUDA_ANDROID_HOME/aarch64-linux-androideabi
+
 CMAKERET=$?
 if [ $CMAKERET -ne 0 ]; then
  echo "CMake error. Exiting."
@@ -69,6 +72,9 @@ mkdir -p share/lua/5.1/imgraph
 cp -r src/3rdparty/imgraph/*.lua share/lua/5.1/imgraph/
 echo "done"
 
+mkdir -p share/lua/5.1/cutorch
+cp -r src/3rdparty/cutorch/*.lua share/lua/5.1/cutorch/
+echo "done"
 #remove cmake files in framework
 echo "removing cmake files in framework"
 rm -rf share/cmake

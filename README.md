@@ -34,7 +34,7 @@ Samples
 Building Torch
 --------------
 1. open build.sh and modify ANDROID_NDK to your android ndk path.
-2. run build script
+2. run build script after setting CUDA_ANDROID_HOME(cuda android directory from NVPACK) and CUDA_TOOLKIT_ROOT(cuda root directory from NVPACK) as environment variables.
 $ sh build.sh
 
 You can use torch in your android apps. The relevant directories are

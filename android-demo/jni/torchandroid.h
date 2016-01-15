@@ -34,6 +34,7 @@ extern "C" {
   int luaopen_libnn(lua_State *L);
   int luaopen_libnnx(lua_State *L);
   int luaopen_libimage(lua_State *L);
+  int luaopen_libcutorch(lua_State *L);
   
   char* android_asset_get_bytes(const char *name);
   long android_asset_get_size(const char *name);

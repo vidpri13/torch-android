@@ -14,6 +14,7 @@ static const luaL_reg lualibs[] =
     { "nn",         luaopen_libnn },
     { "nnx",        luaopen_libnnx },
     { "image",      luaopen_libimage },
+    { "cutorch",    luaopen_libcutorch},
     { NULL,         NULL }
   };
 

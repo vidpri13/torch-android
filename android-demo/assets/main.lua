@@ -6,6 +6,7 @@ require 'torch'
 require 'nnx'
 require 'dok'
 require 'image'
+require 'cutorch'
 
 function demoluafn()
    ret = 'Called demo function from inside lua'

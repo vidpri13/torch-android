@@ -974,7 +974,8 @@ endif()
 if( BUILD_WITH_ANDROID_NDK )
  set( ANDROID_TOOLCHAIN_ROOT "${ANDROID_NDK_TOOLCHAINS_PATH}/${ANDROID_GCC_TOOLCHAIN_NAME}${ANDROID_NDK_TOOLCHAINS_SUBPATH}" )
  set( ANDROID_SYSROOT "${ANDROID_NDK}/platforms/android-${ANDROID_NATIVE_API_LEVEL}/arch-${ANDROID_ARCH_NAME}" )
-
+ set( ANDROID_STL_INCLUDE_DIRS "${ANDROID_NDK}/toolchains/aarch64-linux-android-4.9/gen_standalone/linux-x86_64/include/c++/4.9" )
+ set( ANDROID_STL_INCLUDE_DIRS ${ANDROID_STL_INCLUDE_DIRS} "${ANDROID_NDK}/toolchains/aarch64-linux-android-4.9/gen_standalone/linux-x86_64/include/c++/4.9/aarch64-linux-android" )
  if( ANDROID_STL STREQUAL "none" )
   # do nothing
  elseif( ANDROID_STL STREQUAL "system" )
@@ -1521,9 +1522,9 @@ set( BUILD_ANDROID True )
 set( CMAKE_FIND_ROOT_PATH "${ANDROID_TOOLCHAIN_ROOT}/bin" "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_TOOLCHAIN_MACHINE_NAME}" "${ANDROID_SYSROOT}" "${CMAKE_INSTALL_PREFIX}" "${CMAKE_INSTALL_PREFIX}/share" )
 
 # only search for libraries and includes in the ndk toolchain
-set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM ONLY )
-set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
-set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
+set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH )
+set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH )
+set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH )
 
 
 # macro to find packages on the host OS
