@@ -1,15 +1,10 @@
-wrap = {}
-
-dofile(debug.getinfo(1).source:gsub('init%.lua$', 'types.lua'):gsub('^@', ''))
-
 local CInterface = {}
-wrap.CInterface = CInterface
 
 function CInterface.new()
    self = {}
    self.txt = {}
    self.registry = {}
-   self.argtypes = wrap.argtypes
+   self.defaultArguments = {}
    setmetatable(self, {__index=CInterface})
    return self
 end
@@ -22,6 +17,10 @@ function CInterface:print(str)
    table.insert(self.txt, str)
 end
 
+function CInterface:registerDefaultArgument(code)
+  table.insert(self.defaultArguments, code)
+end
+
 function CInterface:wrap(luaname, ...)
    local txt = self.txt
    local varargs = {...}
@@ -31,19 +30,30 @@ function CInterface:wrap(luaname, ...)
    -- add function to the registry
    table.insert(self.registry, {name=luaname, wrapname=self:luaname2wrapname(luaname)})
 
+   self:__addchelpers()
+
    table.insert(txt, string.format("static int %s(lua_State *L)", self:luaname2wrapname(luaname)))
    table.insert(txt, "{")
    table.insert(txt, "int narg = lua_gettop(L);")
 
+   for i, defaultArgCode in ipairs(self.defaultArguments) do
+      table.insert(txt, defaultArgCode(string.format("default_arg%d", i)))
+   end
+
    if #varargs == 2 then
       local cfuncname = varargs[1]
       local args = varargs[2]
-      
+
       local helpargs, cargs, argcreturned = self:__writeheaders(txt, args)
       self:__writechecks(txt, args)
-      
+
       table.insert(txt, 'else')
-      table.insert(txt, string.format('luaL_error(L, "expected arguments: %s");', table.concat(helpargs, ' ')))
+      table.insert(txt, '{')
+      table.insert(txt, string.format('char type_buf[512];'))
+      table.insert(txt, string.format('str_arg_types(L, type_buf, 512);'))
+      table.insert(txt, string.format('luaL_error(L, "invalid arguments: %%s\\nexpected arguments: %s", type_buf);',
+            table.concat(helpargs, ' ')))
+      table.insert(txt, '}')
 
       self:__writecall(txt, args, cfuncname, cargs, argcreturned)
    else
@@ -75,7 +85,12 @@ function CInterface:wrap(luaname, ...)
       for k=1,#varargs/2 do
          table.insert(allconcathelpargs, table.concat(allhelpargs[k], ' '))
       end
-      table.insert(txt, string.format('luaL_error(L, "expected arguments: %s");', table.concat(allconcathelpargs, ' | ')))
+      table.insert(txt, '{')
+      table.insert(txt, string.format('char type_buf[512];'))
+      table.insert(txt, string.format('str_arg_types(L, type_buf, 512);'))
+      table.insert(txt, string.format('luaL_error(L, "invalid arguments: %%s\\nexpected arguments: %s", type_buf);',
+            table.concat(allconcathelpargs, ' | ')))
+      table.insert(txt, '}')
 
       for k=1,#varargs/2 do
          if k == 1 then
@@ -95,6 +110,37 @@ function CInterface:wrap(luaname, ...)
    table.insert(txt, '')
 end
 
+function CInterface:__addchelpers()
+    if not self.__chelpers_added then
+       local txt = self.txt
+       table.insert(txt, '#ifndef _CWRAP_STR_ARG_TYPES_4821726c1947cdf3eebacade98173939')
+       table.insert(txt, '#define _CWRAP_STR_ARG_TYPES_4821726c1947cdf3eebacade98173939')
+       table.insert(txt, '#include "string.h"')
+       table.insert(txt, 'static void str_arg_types(lua_State *L, char *buf, int n) {')
+       table.insert(txt, '    int i;')
+       table.insert(txt, '  for (i = 1; i <= lua_gettop(L); i++) {')
+       table.insert(txt, '    int l;')
+       table.insert(txt, '    const char *torch_type = luaT_typename(L, i);')
+       table.insert(txt, '    if(torch_type && !strncmp(torch_type, "torch.", 6)) torch_type += 6;')
+       table.insert(txt, '    if (torch_type) l = snprintf(buf, n, "%s ", torch_type);')
+       table.insert(txt, '    else if(lua_isnil(L, i)) l = snprintf(buf, n, "%s ", "nil");')
+       table.insert(txt, '    else if(lua_isboolean(L, i)) l = snprintf(buf, n, "%s ", "boolean");')
+       table.insert(txt, '    else if(lua_isnumber(L, i)) l = snprintf(buf, n, "%s ", "number");')
+       table.insert(txt, '    else if(lua_isstring(L, i)) l = snprintf(buf, n, "%s ", "string");')
+       table.insert(txt, '    else if(lua_istable(L, i)) l = snprintf(buf, n, "%s ", "table");')
+       table.insert(txt, '    else if(lua_isuserdata(L, i)) l = snprintf(buf, n, "%s ", "userdata");')
+       table.insert(txt, '    else l = snprintf(buf, n, "%s ", "???");')
+       table.insert(txt, '    if (l >= n) return;')
+       table.insert(txt, '    buf += l;')
+       table.insert(txt, '    n   -= l;')
+       table.insert(txt, '  }')
+       table.insert(txt, '}')
+       table.insert(txt, '#endif')
+
+       self.__chelpers_added = true
+    end
+end
+
 function CInterface:register(name)
    local txt = self.txt
    table.insert(txt, string.format('static const struct luaL_Reg %s [] = {', name))
@@ -110,6 +156,7 @@ end
 function CInterface:clearhistory()
    self.txt = {}
    self.registry = {}
+   self.defaultArguments = {}
 end
 
 function CInterface:tostring()
@@ -123,7 +170,7 @@ function CInterface:tofile(filename)
 end
 
 local function bit(p)
-   return 2 ^ (p - 1)  -- 1-based indexing                                                          
+   return 2 ^ (p - 1)  -- 1-based indexing
 end
 
 local function hasbit(x, p)
@@ -283,6 +330,10 @@ end
 function CInterface:__writecall(txt, args, cfuncname, cargs, argcreturned)
    local argtypes = self.argtypes
 
+   for i = 1, #self.defaultArguments do
+      table.insert(cargs, i, string.format('default_arg%d', i))
+   end
+
    for _,arg in ipairs(args) do
       tableinsertcheck(txt, arg:precall())
    end
@@ -309,3 +360,4 @@ function CInterface:__writecall(txt, args, cfuncname, cargs, argcreturned)
    table.insert(txt, string.format('return %d;', nret))
 end
 
+return CInterface

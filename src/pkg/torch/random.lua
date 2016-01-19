@@ -38,7 +38,7 @@ interface:wrap('setRNGState',
                  })
 
 interface:register("random__")
-                
+
 interface:print(
    [[
 void torch_random_init(lua_State *L)

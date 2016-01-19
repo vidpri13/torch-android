@@ -9,36 +9,25 @@ endif()
 
 set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
 
-SET( C_HAS_inline_EXITCODE	
+SET( C_HAS_inline_EXITCODE
      "PLEASE_FILL_OUT-FAILED_TO_RUN"
       CACHE STRING "Result from TRY_RUN" FORCE)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
-CMAKE_POLICY(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+CMAKE_POLICY(VERSION 2.8)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake"
                       "${CMAKE_BINARY_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 
-INCLUDE(TorchPaths)
-INCLUDE(TorchPathsInit)
-INCLUDE(TorchCFlags)
-INCLUDE(TorchPackage)
-INCLUDE(TorchWrap)
-
 # Torch executables
-ADD_SUBDIRECTORY(exe)
-
-# Torch libraries
-ADD_SUBDIRECTORY(lib)
+# ADD_SUBDIRECTORY(exe)
 
 # Torch base packages
 ADD_SUBDIRECTORY(pkg)
 
+# Torch libraries
+ADD_SUBDIRECTORY(lib)
+
+
 # Torch extra packages
 ADD_SUBDIRECTORY(3rdparty)
-
-# External packages support
-INCLUDE(TorchExports)
-
-# Packaging support
-INCLUDE(TorchCPack)
