@@ -303,10 +303,8 @@ void luaT_pushudata(lua_State *L, void *udata, const char *tname)
       luaL_error(L, "Torch internal problem: cannot find metatable for type <%s>", tname);
     lua_setmetatable(L, -2);
   }
-  else {
-    lua_pushnil(L); 
-    
-}
+  else
+    lua_pushnil(L);
 }
 
 void *luaT_toudata(lua_State *L, int ud, const char *tname)

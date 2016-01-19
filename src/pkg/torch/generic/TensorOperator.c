@@ -9,7 +9,7 @@ static int torch_TensorOperator_(__add__)(lua_State *L)
   THTensor *r;
 
   if(!tensor1 && !tensor2)
-    luaL_error(L, "expecting two Tensors or one Tensor and one number");
+    luaL_error(L, "expecting two " torch_Tensor "s or one " torch_Tensor " and one number");
   else
   {
     r = THTensor_(new)();
@@ -44,7 +44,7 @@ static int torch_TensorOperator_(__sub__)(lua_State *L)
   THTensor *r;
 
   if(!tensor1 && !tensor2)
-    luaL_error(L, "expecting two Tensors or one Tensor and one number");
+    luaL_error(L, "expecting two " torch_Tensor "s or one " torch_Tensor " and one number");
   else
   {
     r = THTensor_(new)();
@@ -93,7 +93,7 @@ static int torch_TensorOperator_(__mul__)(lua_State *L)
   THTensor *r;
 
   if(!tensor1 && !tensor2)
-    luaL_error(L, "expecting two Tensors or one Tensor and one number");
+    luaL_error(L, "expecting two " torch_Tensor "s or one " torch_Tensor " and one number");
   else
   {
     r = THTensor_(new)();
@@ -142,7 +142,7 @@ static int torch_TensorOperator_(__div__)(lua_State *L)
   THTensor *tensor = luaT_checkudata(L, 1, torch_Tensor);
   THTensor *r;
 
-  luaL_argcheck(L, lua_isnumber(L,2), 2, "number expected");
+  THArgCheck(lua_isnumber(L,2), 2, "number expected");
 
   r = THTensor_(new)();
   luaT_pushudata(L, r, torch_Tensor);
@@ -166,7 +166,7 @@ static const struct luaL_Reg torch_TensorOperator_(_) [] = {
 void torch_TensorOperator_(init)(lua_State *L)
 {
   luaT_pushmetatable(L, torch_Tensor);
-  luaL_register(L, NULL, torch_TensorOperator_(_));
+  luaT_setfuncs(L, torch_TensorOperator_(_), 0);
   lua_pop(L, 1);
 }
 
