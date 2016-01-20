@@ -217,6 +217,7 @@ static StkId adjust_varargs (lua_State *L, Proto *p, int actual) {
     int nvar = actual - nfixargs;  /* number of extra arguments */
     lua_assert(p->is_vararg & VARARG_HASARG);
     luaC_checkGC(L);
+    luaD_checkstack(L, p->maxstacksize);
     htab = luaH_new(L, nvar, 1);  /* create `arg' table */
     for (i=0; i<nvar; i++)  /* put extra arguments into `arg' table */
       setobj2n(L, luaH_setnum(L, htab, i+1), L->top - nvar + i);
@@ -365,7 +366,7 @@ int luaD_poscall (lua_State *L, StkId firstResult) {
 ** The arguments are on the stack, right after the function.
 ** When returns, all the results are on the stack, starting at the original
 ** function position.
-*/ 
+*/
 void luaD_call (lua_State *L, StkId func, int nResults) {
   if (++L->nCcalls >= LUAI_MAXCCALLS) {
     if (L->nCcalls == LUAI_MAXCCALLS)
@@ -514,5 +515,3 @@ int luaD_protectedparser (lua_State *L, ZIO *z, const char *name) {
   luaZ_freebuffer(L, &p.buff);
   return status;
 }
-
-

@@ -276,7 +276,10 @@ static int read_number (lua_State *L, FILE *f) {
     lua_pushnumber(L, d);
     return 1;
   }
-  else return 0;  /* read fails */
+  else {
+    lua_pushnil(L);  /* "result" to be removed */
+    return 0;  /* read fails */
+  }
 }
 
 
@@ -550,4 +553,3 @@ LUALIB_API int luaopen_io (lua_State *L) {
   lua_pop(L, 1);  /* pop 'popen' */
   return 1;
 }
-

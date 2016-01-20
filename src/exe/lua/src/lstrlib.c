@@ -636,7 +636,7 @@ static void add_value (MatchState *ms, luaL_Buffer *b, const char *s,
     lua_pushlstring(L, s, e - s);  /* keep original text */
   }
   else if (!lua_isstring(L, -1))
-    luaL_error(L, "invalid replacement value (a %s)", luaL_typename(L, -1)); 
+    luaL_error(L, "invalid replacement value (a %s)", luaL_typename(L, -1));
   luaL_addvalue(b);  /* add result to accumulator */
 }
 
@@ -754,6 +754,7 @@ static void addintlen (char *form) {
 
 
 static int str_format (lua_State *L) {
+  int top = lua_gettop(L);
   int arg = 1;
   size_t sfl;
   const char *strfrmt = luaL_checklstring(L, arg, &sfl);
@@ -768,7 +769,8 @@ static int str_format (lua_State *L) {
     else { /* format item */
       char form[MAX_FORMAT];  /* to store the format (`%...') */
       char buff[MAX_ITEM];  /* to store the formatted item */
-      arg++;
+      if (++arg > top)
+        luaL_argerror(L, arg, "no value");
       strfrmt = scanformat(L, strfrmt, form);
       switch (*strfrmt++) {
         case 'c': {
@@ -866,4 +868,3 @@ LUALIB_API int luaopen_string (lua_State *L) {
   createmetatable(L);
   return 1;
 }
-
