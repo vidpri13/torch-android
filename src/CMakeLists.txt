@@ -19,15 +19,10 @@ CMAKE_POLICY(VERSION 2.8)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake"
                       "${CMAKE_BINARY_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 
-# Torch executables
-# ADD_SUBDIRECTORY(exe)
+ADD_SUBDIRECTORY(exe)
 
 # Torch base packages
 ADD_SUBDIRECTORY(pkg)
-
-# Torch libraries
-ADD_SUBDIRECTORY(lib)
-
 
 # Torch extra packages
 ADD_SUBDIRECTORY(3rdparty)

@@ -102,7 +102,7 @@ SET(src-cuda
   THCTensorSort.cu
   )
 
-CUDA_ADD_LIBRARY(THC SHARED ${src} ${src-cuda})
+CUDA_ADD_LIBRARY(THC STATIC ${src} ${src-cuda})
 CUDA_ADD_CUBLAS_TO_TARGET(THC)
 TARGET_LINK_LIBRARIES(THC TH ${CUDA_curand_LIBRARY})
 
@@ -135,7 +135,7 @@ INSTALL(FILES
           THCAllocator.h
           THCDeviceUtils.cuh
           THCDeviceTensor.cuh
-          THCDeviceTensor-inl.cuh       
+          THCDeviceTensor-inl.cuh
           THCDeviceTensorUtils.cuh
           THCDeviceTensorUtils-inl.cuh
           DESTINATION "${THC_INSTALL_INCLUDE_SUBDIR}/THC")

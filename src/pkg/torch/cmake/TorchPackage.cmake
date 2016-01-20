@@ -17,8 +17,8 @@ ENDIF(CMAKE_PREFIX_PATH)
   ### C/C++ sources
   IF(src)
 
-    ADD_LIBRARY(${package} MODULE ${src})
-    ADD_LIBRARY(${package}_static STATIC ${src})
+#    ADD_LIBRARY(${package} MODULE ${src})
+    ADD_LIBRARY(${package} STATIC ${src})
 
     ### Torch packages supposes libraries prefix is "lib"
     SET_TARGET_PROPERTIES(${package} PROPERTIES
@@ -31,15 +31,15 @@ ENDIF(CMAKE_PREFIX_PATH)
         LINK_FLAGS "-undefined dynamic_lookup")
     ENDIF()
 
-    SET_TARGET_PROPERTIES(${package}_static PROPERTIES
-      COMPILE_FLAGS "-fPIC")
-    SET_TARGET_PROPERTIES(${package}_static PROPERTIES
-      PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "${package}")
+#    SET_TARGET_PROPERTIES(${package}_static PROPERTIES
+#      COMPILE_FLAGS "-fPIC")
+#    SET_TARGET_PROPERTIES(${package}_static PROPERTIES
+#      PREFIX "lib" IMPORT_PREFIX "lib" OUTPUT_NAME "${package}")
 
     INSTALL(TARGETS ${package}
-      RUNTIME DESTINATION ${Torch_INSTALL_LUA_CPATH_SUBDIR}
-      LIBRARY DESTINATION ${Torch_INSTALL_LUA_CPATH_SUBDIR})
-
+      ARCHIVE DESTINATION ${Torch_INSTALL_LUA_CPATH_SUBDIR})
+#      RUNTIME DESTINATION ${Torch_INSTALL_LUA_CPATH_SUBDIR}
+#      LIBRARY DESTINATION ${Torch_INSTALL_LUA_CPATH_SUBDIR})
   ENDIF(src)
 
   ### lua sources

@@ -3,6 +3,8 @@ CMAKE_POLICY(VERSION 2.6)
 
 FIND_PACKAGE(Torch REQUIRED)
 
+# LINK_DIRECTORIES("${Torch_INSTALL_LIB}")
+
 SET(src init.c)
 
 FILE(GLOB luasrc *.lua)
@@ -11,3 +13,6 @@ SET(luasrc ${luasrc} test/test.lua)
 ADD_TORCH_PACKAGE(nn "${src}" "${luasrc}")
 
 TARGET_LINK_LIBRARIES(nn luaT TH)
+
+INSTALL(DIRECTORY "doc" DESTINATION "${Torch_INSTALL_LUA_PATH_SUBDIR}/nn")
+INSTALL(FILES "README.md" DESTINATION "${Torch_INSTALL_LUA_PATH_SUBDIR}/nn")
