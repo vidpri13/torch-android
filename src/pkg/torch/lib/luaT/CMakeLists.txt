@@ -8,8 +8,8 @@ IF(LUALIB)
   LINK_DIRECTORIES(${LUA_LIBDIR}) # note: must be done before defining target
 ENDIF()
 
-# ADD_LIBRARY(luaT SHARED luaT.h luaT.c)
-ADD_LIBRARY(luaT_static STATIC luaT.h luaT.c)
+ADD_LIBRARY(luaT STATIC luaT.h luaT.c)
+# ADD_LIBRARY(luaT_static STATIC luaT.h luaT.c)
 
 IF(APPLE)
   SET_TARGET_PROPERTIES(luaT PROPERTIES
@@ -17,7 +17,7 @@ IF(APPLE)
 ENDIF()
 
 IF(LUALIB)
-  TARGET_LINK_LIBRARIES(luaT_static ${LUALIB}) # must be done after ;)
+  TARGET_LINK_LIBRARIES(luaT ${LUALIB}) # must be done after ;)
 ENDIF()
 
 INSTALL(TARGETS luaT

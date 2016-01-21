@@ -32,3 +32,7 @@ SET(Torch_INSTALL_LUA_PATH_SUBDIR "share/lua/5.1" CACHE PATH
 
 SET(Torch_INSTALL_LUA_CPATH_SUBDIR "lib/lua/5.1" CACHE PATH
   "Install dir for Lua C packages files (relative to Torch_INSTALL_PREFIX)")
+
+SET(LUA_LIBDIR "${CMAKE_BINARY_DIR}/exe/lua" CACHE PATH "LUA Lib Dir")
+SET(LUA_INCDIR "${CMAKE_SOURCE_DIR}/exe/lua/src" CACHE PATH "LUA Inc Dir")
+SET(LUA_INCDIR "${LUA_INCDIR} ${CMAKE_SOURCE_DIR}/exe/lua" CACHE PATH "LUA Inc Dir")

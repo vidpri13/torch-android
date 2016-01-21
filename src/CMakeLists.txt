@@ -1,17 +1,22 @@
 # -*- cmake -*-
-PROJECT(Torch)
-#test for ANDROID and look for stuff not relevant to android.
-if(NOT ANDROID)
-#jni is available by default on android
-find_package(JNI REQUIRED)
-include_directories(${JNI_INCLUDE_DIRS})
-endif()
 
 set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
 
 SET( C_HAS_inline_EXITCODE
-     "PLEASE_FILL_OUT-FAILED_TO_RUN"
-      CACHE STRING "Result from TRY_RUN" FORCE)
+     TRUE
+     CACHE STRING "Result from TRY_RUN" FORCE)
+
+SET( C_HAS___inline___EXITCODE
+     TRUE
+     CACHE STRING "Result from TRY_RUN" FORCE)
+
+SET( C_HAS___inline_EXITCODE
+     TRUE
+     CACHE STRING "Result from TRY_RUN" FORCE)
+
+SET( HAS_GCC_ATOMICS_EXITCODE
+     TRUE
+     CACHE STRING "Result from TRY_RUN" FORCE)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
 CMAKE_POLICY(VERSION 2.8)

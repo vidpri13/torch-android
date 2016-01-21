@@ -231,12 +231,12 @@ if( NOT DEFINED ANDROID_STANDALONE_TOOLCHAIN_SEARCH_PATH )
 endif()
 
 # known ABIs
-set( ANDROID_SUPPORTED_ABIS_arm "armeabi-v7a;armeabi;armeabi-v7a with NEON;armeabi-v7a with VFPV3;armeabi-v6 with VFP" )
+# set( ANDROID_SUPPORTED_ABIS_arm "armeabi-v7a;armeabi;armeabi-v7a with NEON;armeabi-v7a with VFPV3;armeabi-v6 with VFP" )
 set( ANDROID_SUPPORTED_ABIS_arm64 "arm64-v8a" )
-set( ANDROID_SUPPORTED_ABIS_x86 "x86" )
-set( ANDROID_SUPPORTED_ABIS_x86_64 "x86_64" )
-set( ANDROID_SUPPORTED_ABIS_mips "mips" )
-set( ANDROID_SUPPORTED_ABIS_mips64 "mips64" )
+# set( ANDROID_SUPPORTED_ABIS_x86 "x86" )
+# set( ANDROID_SUPPORTED_ABIS_x86_64 "x86_64" )
+# set( ANDROID_SUPPORTED_ABIS_mips "mips" )
+# set( ANDROID_SUPPORTED_ABIS_mips64 "mips64" )
 
 # API level defaults
 set( ANDROID_DEFAULT_NDK_API_LEVEL 8 )

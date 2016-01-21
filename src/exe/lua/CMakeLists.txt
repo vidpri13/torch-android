@@ -74,8 +74,8 @@ ENDIF()
 
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR} src)
 CONFIGURE_FILE(src/luaconf.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h src/lua.h src/lauxlib.h src/lualib.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/luaconf.h)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/luaconf.h src/lua.h src/lauxlib.h src/lualib.h
   DESTINATION "${INSTALL_INCLUDE_SUBDIR}")
 
 SET(SRC_LIB
@@ -84,7 +84,7 @@ SET(SRC_LIB
   src/lundump.c src/lvm.c src/lzio.c
   src/lauxlib.c src/lbaselib.c src/ldblib.c src/liolib.c
   src/lmathlib.c src/loslib.c src/ltablib.c src/lstrlib.c src/loadlib.c src/linit.c
-  ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h)
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/luaconf.h)
 # Compile library as C (android)
 #SET_SOURCE_FILES_PROPERTIES(${_lua_lib_src} ${_lua_src} ${_luac_src} PROPERTIES
 #  OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/luaconf.h"
@@ -108,5 +108,5 @@ INSTALL(TARGETS lua luac liblua
   LIBRARY DESTINATION "${INSTALL_LIB_SUBDIR}"
   ARCHIVE DESTINATION "${INSTALL_LIB_SUBDIR}")
 
-INSTALL(FILES src/lua.h ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h src/lualib.h src/lauxlib.h
+INSTALL(FILES src/lua.h ${CMAKE_CURRENT_SOURCE_DIR}/src/luaconf.h src/lualib.h src/lauxlib.h
   DESTINATION "${INSTALL_INCLUDE_SUBDIR}/lua")
